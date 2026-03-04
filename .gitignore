@@ -1,4 +1,4 @@
-knowledge_base/*
+knowledgeBase/*
 .env
 .vscode/*
 __pycache__/*

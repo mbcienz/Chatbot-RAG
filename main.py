@@ -1,5 +1,5 @@
 import gradio as gr
-from chatbot_manager import ChatbotManager
+from ChatbotManager import ChatbotManager
 
 def launch_app(bot_manager):
     """
@@ -26,7 +26,7 @@ def main():
     You are a helpful assistant. Answer the user's questions based on the conversation history.
     """
     temperature = 0.7
-    kb_path = "./knowledge_base/"  # Path to the knowledge base for RAG
+    kb_path = "./knowledgeBase/"  # Path to the knowledge base for RAG
     
     # Instantiate the manager globally
     bot_manager = ChatbotManager(
