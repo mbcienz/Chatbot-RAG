@@ -1,0 +1,28 @@
+{
+    "ui": {
+        "title": "RAG Chatbot",
+        "description": "### Welcome!\nI am a **RAG-powered chatbot**. Unlike standard AI, I have access to a specific **Knowledge Base**.\n\n**Instructions:** Please ask questions about the documents or data I've been trained on.\nI will retrieve the most relevant information to provide accurate, grounded answers."
+    },
+    "loader": {
+        "type": "pdf_directory",
+        "path": "./knowledgeBase"
+    },
+    "splitter": {
+        "type": "recursive_character",
+        "chunk_size": 700,
+        "chunk_overlap": 50
+    },
+    "vector_store": {
+        "type": "faiss",
+        "k": 3
+    },
+    "chat_model": {
+        "provider": "hf",
+        "model_id": "Qwen/Qwen3-Coder-Next",
+        "max_tokens": 1000,
+        "temperature": 0.3
+    },
+    "chatbot": {
+        "system_prompt": "You are a professional RAG assistant. Use the provided context to answer questions accurately."
+    }
+}

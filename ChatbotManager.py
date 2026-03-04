@@ -1,42 +1,33 @@
-import time
-
 class ChatbotManager:
     """
-    The central manager for the chatbot logic. 
-    Handles model configuration, message processing, and history formatting.
+    Connects Retrieval logic with LLM Generation.
     """
-    def __init__(self, system_prompt="", temperature=0.7, kb_path=None):
+
+    def __init__(self, system_prompt, loader, splitter, vector_store, chat_model):
         self.system_prompt = system_prompt
-        self.temperature = temperature
-        self.kb_path = kb_path
+        self.loader = loader
+        self.splitter = splitter
+        self.vector_store = vector_store
+        self.chat_model = chat_model
 
-    def generate_response(self, user_message: str, chat_history: list):
-        """Main entry point for generating a response.
+    def initialize_knowledge_base(self):
+        """Prepares the vector database."""
+        raw_docs = self.loader.load()
+        chunks = self.splitter.split(raw_docs)
+        self.vector_store.ingest_documents(chunks)
 
-        Args:
-            user_message (str): The current string sent by the user.
-            chat_history (list): List of previous messages in the conversation.
-
-        Returns:
-            str: The generated response string.
+    def generate_response(self, message: str, history: list):
         """
-        
-        
-        bot_response = "Hello!"
-        print(f"Received message: {user_message}")
-        print(f"Chat history: {chat_history}")
-        return bot_response
-
-    def _format_history(self, chat_history):
-        """Internal helper to transform Gradio history into a format 
-        compatible with the chosen LLM provider.
-
-        Args:
-            chat_history (list): List of previous messages in the conversation.
-
-        Returns:
-            list: List of previous messages in the conversation.
+        The RAG Loop: 
+        1. Retrieve relevant chunks.
+        2. Construct the prompt with Context.
+        3. Generate answer via ChatModel.
         """
+        # 1. Retrieval
+
+        # 2. Prompt Engineering (Basic Example)
+
+        # 3. Generation
+        response = "Hello!"
         
-        # Placeholder for complex history logic (e.g. sliding window, RAG retrieval)
-        return chat_history
+        return response

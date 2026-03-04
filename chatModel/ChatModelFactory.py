@@ -12,7 +12,7 @@ class ChatModelFactory():
         """
         if provider == "hf":
             from chatModel.HuggingFaceModel import HuggingFaceModel
-            return HuggingFaceModel(kwargs["repo_id"], kwargs["max_tokens"], kwargs["task"])
+            return HuggingFaceModel(kwargs["model_id"], kwargs["max_tokens"], kwargs["temperature"])
         elif provider == "langchain":
             from chatModel.LangChainModel import LangChainModel
             return LangChainModel(kwargs["model_id"], kwargs["max_tokens"], kwargs["temperature"])

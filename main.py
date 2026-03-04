@@ -1,41 +1,32 @@
 import gradio as gr
-from ChatbotManager import ChatbotManager
+from AppConfigurator import AppConfigurator
 
-def launch_app(bot_manager):
+def launch_app(bot_manager, ui_config):
     """
-    Configures and starts the Gradio web interface.
+    Starts the Gradio web interface using UI settings from config.
     """
-    # Create the interface using the ChatInterface high-level component
+    # Pre-process the knowledge base
+    bot_manager.initialize_knowledge_base()
+
+    # Setup the interface
     view = gr.ChatInterface(
         fn=bot_manager.generate_response,
-        title="RAG Chatbot",
-        description="""
-        ### Welcome! 
-        I am a **RAG-powered chatbot**. Unlike standard AI, I have access to a specific **Knowledge Base**.
-        
-        **Instructions:** Please ask questions about the documents or data I've been trained on. 
-        I will retrieve the most relevant information to provide accurate, grounded answers.
-        """,
+        title=ui_config.get("title", "AI Assistant"),
+        description=ui_config.get("description", ""),
         fill_height=True
-    ).launch()
+    )
 
+    view.launch()
 
 def main():
-    # Define the chatbot's configuration
-    system_prompt = """
-    You are a helpful assistant. Answer the user's questions based on the conversation history.
-    """
-    temperature = 0.7
-    kb_path = "./knowledgeBase/"  # Path to the knowledge base for RAG
+    # 1. Load the master configuration
+    config = AppConfigurator.read_config("config.json")
     
-    # Instantiate the manager globally
-    bot_manager = ChatbotManager(
-        system_prompt=system_prompt, 
-        temperature=temperature,
-        kb_path=kb_path)
-
-    # Start the Gradio app with the chatbot manager
-    launch_app(bot_manager)
+    # 2. Build the system core
+    bot_manager = AppConfigurator.create_manager_from_config(config)
+    
+    # 3. Run the application with UI parameters
+    launch_app(bot_manager, config["ui"])
 
 if __name__ == "__main__":
     main()
