@@ -1,3 +1,5 @@
+from langchain_core.runnables import RunnableParallel, RunnableLambda, RunnableSerializable
+
 class Chain():
     """Chain is a composable pipeline manager that allows combining multiple
     step into a single executable chain. Each step should implement an `invoke` method 
@@ -13,11 +15,23 @@ class Chain():
         self.chain = None
 
     def add(self, step):
-        """add a step in the chain.
+        """Ensures compatibility with LangChain's Expression Language (LCEL) 
+        by automatically wrapping dictionaries into 'RunnableParallel' and 
+        callables/methods into 'RunnableLambda'.
 
         Args:
-            step (_type_): _description_
+            step (Any): The step to add. Can be a LangChain Runnable, 
+                        a dictionary of runnables, or a callable function/method.
         """
+        if isinstance(step, dict):
+            # If the step is a dictionary, wrap it into a RunnableParallel 
+            # to allow parallel execution of multiple branches.
+            step = RunnableParallel(step)
+        elif callable(step) and not isinstance(step, (RunnableSerializable, RunnableLambda)):
+            # If the step is a callable and not already a LangChain component, 
+            # wrap it into a RunnableLambda to make it compatible with the pipe operator.
+            step = RunnableLambda(step)
+            
         self.chain_steps.append(step)
 
     def clear(self):
@@ -44,7 +58,7 @@ class Chain():
         """Call the invoke method on the given prompt
 
         Args:
-            prompt (str): Prompt to give to the model.
+            prompt (str): Prompt to submit to the model.
         """
         if self.chain is None:
             self.build()
