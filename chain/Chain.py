@@ -48,4 +48,4 @@ class Chain():
         """
         if self.chain is None:
             self.build()
-        self.chain.invoke(prompt)
+        return self.chain.invoke(prompt)
