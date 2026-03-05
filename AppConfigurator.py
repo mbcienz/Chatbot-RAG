@@ -52,7 +52,6 @@ class AppConfigurator:
 
         # 5. Assemble the Manager
         return ChatbotManager(
-            system_prompt=config["chatbot"]["system_prompt"],
             loader=loader,
             splitter=splitter,
             vector_store=vector_store,

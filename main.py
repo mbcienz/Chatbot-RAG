@@ -5,9 +5,6 @@ def launch_app(bot_manager, ui_config):
     """
     Starts the Gradio web interface using UI settings from config.
     """
-    # Pre-process the knowledge base
-    bot_manager.initialize_knowledge_base()
-
     # Setup the interface
     view = gr.ChatInterface(
         fn=bot_manager.generate_response,

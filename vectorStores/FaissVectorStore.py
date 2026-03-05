@@ -9,7 +9,7 @@ class FaissVectorStore(BaseVectorStore):
     Concrete implementation of a Vector Store using FAISS.
     """
 
-    def __init__(self, embeddings: Embeddings, k: int = 3):
+    def __init__(self, embeddings: Embeddings, k: int = 3, faiss_index: str = "faiss_index"):
         """
         Initializes the FAISS store with a specific embedding model.
 
@@ -19,6 +19,7 @@ class FaissVectorStore(BaseVectorStore):
         """
         self.embeddings = embeddings
         self.k = k
+        self.faiss_index = faiss_index
         self.vectorstore: Optional[FAISS] = None
         self.retriever = None
 
@@ -33,20 +34,18 @@ class FaissVectorStore(BaseVectorStore):
             return
 
         self.vectorstore = FAISS.from_documents(documents, self.embeddings)
+        self.vectorstore.save_local(self.faiss_index)
+
         # Initialize the retriever with default search parameters
         self.retriever = self.vectorstore.as_retriever(search_kwargs={"k": self.k})
 
-    def get_relevant_documents(self, query: str) -> List[Document]:
+    def get_retriever(self):
         """
-        Uses the retriever to find documents similar to the query.
-
-        Args:
-            query (str): User question.
+        Returns the retriever for querying the FAISS index.
 
         Returns:
-            List[Document]: Relevant chunks found in FAISS.
+            The retriever object for querying the FAISS index.
         """
-        if not self.retriever:
-            return []
-        
-        return self.retriever.get_relevant_documents(query)
+        if self.retriever is None:
+            raise ValueError("The FAISS index has not been created. Please ingest documents first.")
+        return self.retriever

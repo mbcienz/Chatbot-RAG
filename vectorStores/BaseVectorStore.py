@@ -18,14 +18,11 @@ class BaseVectorStore(ABC):
         pass
 
     @abstractmethod
-    def get_relevant_documents(self, query: str) -> List[Document]:
+    def get_retriever(self):
         """
-        Retrieves the most relevant documents based on a query.
-
-        Args:
-            query (str): The user's search query.
+        Returns the retriever for querying the vector database.
 
         Returns:
-            List[Document]: The most relevant document chunks.
+            The retriever object for querying the vector database.
         """
         pass
