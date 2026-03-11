@@ -52,13 +52,28 @@ The `ChatbotManager` acts as the orchestrator, utilizing a `Chain` component to 
     ```bash
     pip install -r requirements.txt
 
+4. **Environment Variables Setup**: create a `.env` file in the root directory of the project to securely store your API keys. Add the following tokens:
+   ```env
+   GOOGLE_API_KEY=your_google_api_key_here
+   HUGGINGFACEHUB_API_TOKEN=your_huggingface_token_here
 ---
+
+## Configuration
+The entire application is highly customizable without touching the Python code. All configurable parameters of the app are settable directly from the `config.json` file. This includes settings for the **model providers**, **LLM parameters**, **vector stores**, **text splitters**, and **document loaders**.
+
+### Supported Providers and Models
+Through the `config.json`, you can define which LLM provider and model to use. The currently supported provider keys are:
+
+* **`hf`**: uses native Hugging Face models via the HuggingFace endpoint.
+* **`langchain`**: utilizes LangChain's universal `init_chat_model` function. This allows the framework to theoretically support *all* providers and models supported by LangChain. 
+  * When using the `langchain` provider, you must insert the model in the exact `provider:model_id` format. For example: `google_genai:gemini-2.5-flash-lite`.
+
+*Note: while the `langchain` integration makes it possible to support all models available in the LangChain ecosystem, currently only the Hugging Face (`hf`) and Google (`google`) models have been explicitly tested and supported. However, extending support to other models is fully possible.*
 
 ## Usage
 
 ### Data Preparation
-
-To index your documents (currently supporting PDF files), place your source files in the designated data directory.
+To index your documents (currently supporting PDF files), place your source files in the designated data directory as defined in your `config.json`.
 ### Running the Application
 
 To start the chatbot interface or CLI:
@@ -68,10 +83,10 @@ To start the chatbot interface or CLI:
 
 ## Technical Features
 
-* **Abstract Factory Pattern**: Ensures that components (Models, Loaders, Vector Stores) are created consistently and are easily swappable.
-* **Flexible Document Parsing**: Designed to support multiple data sources beyond the current PDF implementation.
-* **Customizable Chunking**: Uses `RecursiveCharacterSplitter` via `DocumentSplittersFactory` for optimal context window management.
-* **Agnostic LLM Integration**: Decoupled from specific providers to prevent vendor lock-in, supporting both HuggingFace and LangChain providers.
+* **Abstract Factory Pattern**: ensures that components (Models, Loaders, Vector Stores) are created consistently and are easily swappable.
+* **Flexible Document Parsing**: designed to support multiple data sources beyond the current PDF implementation.
+* **Customizable Chunking**: uses `RecursiveCharacterSplitter` via `DocumentSplittersFactory` for optimal context window management.
+* **Agnostic LLM Integration**: decoupled from specific providers to prevent vendor lock-in, supporting both HuggingFace and LangChain providers dynamically via JSON configuration.
 
 ## License
 
