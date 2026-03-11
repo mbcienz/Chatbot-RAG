@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
 from chatModel.BaseModel import BaseModel
 
@@ -14,10 +16,17 @@ class HuggingFaceModel(BaseModel):
         self.max_tokens = max_tokens
         self.temperature = temperature
 
+        # Load Hugging Face API token from .env file
+        load_dotenv()
+        hf_token = os.getenv("HUGGINGFACEHUB_API_TOKEN")
+        if not hf_token:
+            print("Warning: Hugging Face API token not found. Please insert 'HUGGINGFACEHUB_API_TOKEN' in your .env file.")
+
         self.llm = HuggingFaceEndpoint(
             repo_id = self.model_id,
             temperature = self.temperature,
-            max_new_tokens = self.max_tokens
+            max_new_tokens = self.max_tokens,
+            huggingfacehub_api_token=hf_token
         )
 
         self.chat_model = ChatHuggingFace(llm = self.llm)

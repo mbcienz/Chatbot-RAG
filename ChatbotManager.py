@@ -104,7 +104,6 @@ class ChatbotManager:
         ANSWER:
         """
         final_prompt = prompt_template
-        print("--- DEBUG PROMPT START ---\n", final_prompt, "\n--- DEBUG PROMPT END ---")
         return final_prompt
 
 
