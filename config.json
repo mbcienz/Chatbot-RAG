@@ -17,6 +17,7 @@
         "k": 3
     },
     "chat_model": {
+        "_comment": "You can choose also provider: langchain, and model_id: google_genai:gemini-2.5-flash-lite",
         "provider": "hf",
         "model_id": "Qwen/Qwen3-Coder-Next",
         "max_tokens": 1000,
